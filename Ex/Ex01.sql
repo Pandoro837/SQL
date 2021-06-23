@@ -1,7 +1,25 @@
 /*from절, select절*/
 --모든 컬럼 조회하기
-select  *       --*은 모든 칼럼을 선택한다
+select  *       --'*'은 모든 칼럼을 선택한다
 from employees;        
+
+select * 
+from departments;
+
+--원하는 컬럼만 조회하기
+select employee_id, first_name, last_name	--select는 컬럼을 선택하여 해당 값을 조회한다
+from employees;								--~에서, from은 지정된 table에서 값을 불러온다
+
+--예제)
+select first_name, phone_number, hire_date, salary	--select 절에 해당 컬럼을 row에서 선택하여 투사(projection)하는 방식으로 작동한다
+from employees;										--from으로 테이블의 row 값을 불러들인다
+
+select first_name, 	--가독성을 위해, select절의 내용은 줄을 맞춰 적는다
+       last_name, 
+       phone_number, 
+       email, 
+       hire_date
+from employees;
 
 --컬럼에 별명 붙이기
 select  employee_id as "empNo",   --큰따옴표로 묶어주어야 한다
