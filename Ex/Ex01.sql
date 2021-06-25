@@ -1,6 +1,6 @@
 /*from절, select절*/
 --모든 컬럼 조회하기
-select  *       --'*'은 모든 칼럼을 선택한다
+select  *       --'*'은 모든 컬럼을 선택한다
 from employees;        
 
 select * 
