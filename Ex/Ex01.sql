@@ -13,7 +13,7 @@ from employees;								--~에서, from은 지정된 table에서 값을 불러온
 --예제)
 select first_name, phone_number, hire_date, salary	--select 절에 해당 컬럼을 row에서 선택하여 투사(projection)하는 방식으로 작동한다
 from employees;										--from으로 테이블의 row 값을 불러들인다
-
+ 
 select first_name, 	--가독성을 위해, select절의 내용은 줄을 맞춰 적는다
        last_name, 
        phone_number, 
