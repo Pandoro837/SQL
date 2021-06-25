@@ -78,6 +78,7 @@ select  manager_id,
         min(salary),
         max(salary)
 from    employees
+where   hire_date >= '2005/01/01'
 group by manager_id
 having  avg(salary) >= 5000
 order by avg(salary) desc;
