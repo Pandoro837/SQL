@@ -73,7 +73,7 @@ from employees;
 select  first_name
 from employees
 where department_id != 10;  --where 절에서 해당 컬럼의 필드 값이 일치하는 정보를 찾기 위해서는 
-                            --등호를 사용하여 필드 값을 입력해주어야 한다(비교연산자를 이용하여 범위를 지정할 수도 있다)
+                            --등호를 사용하여 비교할 값을 입력해주어야 한다(비교연산자를 이용하여 범위를 지정할 수도 있다)
 --예제
 select  first_name || ' ' || last_name 이름,
         salary 월급
