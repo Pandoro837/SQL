@@ -84,3 +84,5 @@ FROM
 DELETE FROM author
 WHERE author_name = '기안84'; 
 --해당 레코드의 일부(author_id)를 FK(book_fk)로 사용하고 있으므로, 삭제할 수 없다
+
+COMMIT;	--값을 저장
