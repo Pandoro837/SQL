@@ -1,29 +1,17 @@
-CREATE TABLE author(
+--author table 생성
+CREATE TABLE author(  
     author_id   NUMBER(10),
     author_name VARCHAR2(100),
     author_desc VARCHAR2(100),
     PRIMARY KEY (author_id)
 );
 
-CREATE TABLE book (
-    book_id NUMBER(10),
-    title   VARCHAR2(100) NOT NULL,
-    pubs    VARCHAR2(100),
-    pub_date DATE,
-    author_id NUMBER(10),
-    PRIMARY KEY (book_id),
-    --참조키를 author_id가 갖고 있기 때문에 author table을 먼저 만들어야 한다
-    CONSTRAINT book_fk FOREIGN KEY (author_id) 
-    REFERENCES author(author_id)
-);
-
-CREATE SEQUENCE seq_author_id
+--author_id 시퀀스
+CREATE SEQUENCE seq_author_id   
 INCREMENT BY 1
 START WITH 1;
-
-CREATE SEQUENCE seq_book_id
-INCREMENT BY 1
-START WITH 1;
+--author_id 시퀀스 삭제
+DROP SEQUENCE seq_author_id;    
 
 --묵시적 방식, 해당 테이블은 작가 번호, 작가 이름, 작가설명 순으로 작성되었기 때문에
 --해당 순서대로 입력한다면 별도의 지정 없이 레코드에 저장된다
@@ -40,10 +28,34 @@ VALUES (seq_author_id.NEXTVAL, '강풀', '온라인 만화가 1세대');
 INSERT INTO author
 VALUES (seq_author_id.NEXTVAL, '김영하', '알쓸신잡');
 
-SELECT  --확인
+SELECT  --author table 확인
     *
 FROM
     author;
+    
+--author table 삭제
+DROP TABLE author; 
+
+
+--book table 생성
+CREATE TABLE book (
+    book_id NUMBER(10),
+    title   VARCHAR2(100) NOT NULL,
+    pubs    VARCHAR2(100),
+    pub_date DATE,
+    author_id NUMBER(10),
+    PRIMARY KEY (book_id),
+    --참조키를 author_id가 갖고 있기 때문에 author table을 먼저 만들어야 한다
+    CONSTRAINT book_fk FOREIGN KEY (author_id) 
+    REFERENCES author(author_id)
+);
+
+ --book_id 시퀀스
+CREATE SEQUENCE seq_book_id    
+INCREMENT BY 1
+START WITH 1;
+--book_id 시퀀스 삭제
+DROP SEQUENCE seq_book_id;      
 
 INSERT INTO book
 VALUES (seq_book_id.NEXTVAL, '우리들의 일그러진 영웅', '다림', '19980222', 1);
@@ -62,6 +74,10 @@ VALUES (seq_book_id.NEXTVAL, '오직두사람', '문학동네', '20170504', 6);
 INSERT INTO book
 VALUES (seq_book_id.NEXTVAL, '26년', '재미주의', '20120204', 5);
 
+--book table 삭제
+DROP TABLE book; 
+
+
 --다음과 같이 출력되도록 테이블을 생성하고 데이터를 입력하세요
 SELECT
     *
@@ -76,13 +92,15 @@ SET author_desc = '서울 특별시'
 WHERE author_name = '강풀';
 
 SELECT  --확인
-    *
+    author_id,
+    author_name,
+    author_desc
 FROM
-    author;
+    author
+WHERE
+    author_name = '강풀';
     
---author 테이블에서 기안84 데이터를 삭제해 보세요  삭제 안됨
+--author 테이블에서 기안84 데이터를 삭제해 보세요 ? 삭제 안됨
 DELETE FROM author
 WHERE author_name = '기안84'; 
 --해당 레코드의 일부(author_id)를 FK(book_fk)로 사용하고 있으므로, 삭제할 수 없다
-
-COMMIT;	--값을 저장
