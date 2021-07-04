@@ -157,39 +157,88 @@ WHERE de.department_id = (SELECT
                                                     employees
                                                 GROUP BY department_id));
 
-/*문제9. 평균 급여(salary)가 가장 높은 지역은?*/ 
--- Europe
-SELECT 
-    re.region_name,
-    region_avg_salary
+SELECT
+    re.region_name "지역이름"
 FROM
     regions re,
     (SELECT
         co.region_id,
-        avg(country_avg_salary) region_avg_salary
+        AVG(co_avg_salary) re_avg_salary            --지역별 평균 급여
      FROM
-        countries co,
+        countries co,    
         (SELECT
             lo.country_id,
-            avg(location_avg_salary) country_avg_salary
+            AVG(lo_avg_salary) co_avg_salary        --나라별 평균 급여
          FROM
             locations lo,
             (SELECT
-                ed.location_id,
-                avg(salary) location_avg_salary
+                de.location_id,
+                AVG(de_avg_salary) lo_avg_salary    --도시별 평균 급여
              FROM
+                departments de,
                 (SELECT
-                    em.salary,
-                    de.location_id
+                    AVG(em.salary) de_avg_salary,   --부서별 평균 급여
+                    department_id
                  FROM
-                    employees em, 
-                    departments de
-                 WHERE em.department_id = de.department_id) ed
-             GROUP BY ed.location_id) ged
-         WHERE lo.location_id = ged.location_id
-         GROUP BY lo.country_id) lged
-     WHERE lged.country_id = co.country_id
-     GROUP BY co.region_id) clged
-WHERE clged.region_id = re.region_id;
+                    employees em
+                 GROUP BY em.department_id) em
+             WHERE de.department_id = em.department_id
+             GROUP BY de.location_id) de
+         WHERE lo.location_id = de.location_id
+         GROUP BY lo.country_id) lo
+     WHERE co.country_id = lo.country_id
+     GROUP BY co.region_id) co
+WHERE re.region_id = co.region_id
+  AND re_avg_salary = (SELECT
+                            MAX(re_avg_salary)      --지역별 평균 급여의 최고값
+                       FROM 
+                            (SELECT
+                                co.region_id,
+                                AVG(co_avg_salary) re_avg_salary
+                             FROM
+                                countries co,    
+                                (SELECT
+                                    lo.country_id,
+                                    AVG(lo_avg_salary) co_avg_salary
+                                 FROM
+                                    locations lo,
+                                    (SELECT
+                                        de.location_id,
+                                        AVG(de_avg_salary) lo_avg_salary
+                                     FROM
+                                        departments de,
+                                        (SELECT
+                                            AVG(em.salary) de_avg_salary,
+                                            department_id
+                                         FROM
+                                            employees em
+                                         GROUP BY em.department_id) em
+                                     WHERE de.department_id = em.department_id
+                                     GROUP BY de.location_id) de
+                                 WHERE lo.location_id = de.location_id
+                                 GROUP BY lo.country_id) lo
+                             WHERE co.country_id = lo.country_id
+                             GROUP BY co.region_id) co);
 
 /*문제10. 평균 급여(salary)가 가장 높은 업무는?*/
+SELECT
+    js.job_title "업무명",
+    job_avg_salary "평균 급여"
+FROM
+    jobs js,
+    (SELECT
+        job_id,
+        AVG(salary) job_avg_salary
+     FROM
+        employees
+     GROUP BY job_id) em
+WHERE js.job_id =  em.job_id
+  AND job_avg_salary = (SELECT
+                            MAX(job_avg_salary)
+                        FROM
+                            (SELECT
+                                job_id,
+                                AVG(salary) job_avg_salary
+                             FROM
+                                employees
+                             GROUP BY job_id));
